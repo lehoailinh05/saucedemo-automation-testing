@@ -1,14 +1,13 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import pytest
+from pages.login_page import LoginPage
 
 class TestLogin:
     def setup_method(self):
-        # Khởi tạo driver an toàn bằng WebDriver Manager
         service = Service(ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service)
         self.driver.maximize_window()
@@ -16,40 +15,30 @@ class TestLogin:
         self.wait = WebDriverWait(self.driver, 10)
 
     def teardown_method(self):
-        # Đảm bảo đóng trình duyệt sau mỗi ca test
         self.driver.quit()
 
     def test_login_success(self):
         """TC_LG_01: Đăng nhập thành công với tài khoản chuẩn"""
-        self.driver.find_element(By.ID, "user-name").send_keys("standard_user")
-        self.driver.find_element(By.ID, "password").send_keys("secret_sauce")
-        self.driver.find_element(By.ID, "login-button").click()
+        login_page = LoginPage(self.driver)
+        login_page.login("standard_user", "secret_sauce")
         
-        # Dùng Explicit Wait để đợi URL chuyển hướng thay vì assert trực tiếp ngay lập tức
+        # Chờ URL chuyển hướng thành công sang trang sản phẩm
         self.wait.until(EC.url_contains("inventory"))
         assert "inventory" in self.driver.current_url
 
-    # Gộp tất cả các ca đăng nhập thất bại của bạn vào đây bằng Parametrize
     @pytest.mark.parametrize(
-        "username, password",
+        "username, password, expected_error",
         [
-            ("standard_user", "wrongpass"),   # test_login_wrong_password
-            ("locked_out_user", "secret_sauce"), # test_login_locked_user
-            ("", "secret_sauce")              # test_login_empty_username
+            ("standard_user", "wrongpass", "Username and password do not match"),
+            ("locked_out_user", "secret_sauce", "Sorry, this user has been locked out"),
+            ("", "secret_sauce", "Username is required")
         ]
     )
-    def test_login_failures(self, username, password):
-        """Gộp các kịch bản lỗi: Hệ thống phải hiển thị thông báo lỗi"""
-        # Chỉ nhập nếu username không phải chuỗi rỗng
-        if username:
-            self.driver.find_element(By.ID, "user-name").send_keys(username)
-        if password:
-            self.driver.find_element(By.ID, "password").send_keys(password)
-            
-        self.driver.find_element(By.ID, "login-button").click()
+    def test_login_failures(self, username, password, expected_error):
+        """Gộp các kịch bản lỗi: Hệ thống phải hiển thị thông báo lỗi tương ứng"""
+        login_page = LoginPage(self.driver)
+        login_page.login(username, password)
         
-        # Tận dụng self.wait đã tạo ở setup_method để đợi element lỗi hiển thị
-        error_element = self.wait.until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "error-message-container"))
-        )
-        assert error_element.is_displayed()
+        # Lấy text lỗi từ trang thông qua lớp LoginPage đã tối ưu
+        error_msg = login_page.get_error_message()
+        assert expected_error in error_msg
