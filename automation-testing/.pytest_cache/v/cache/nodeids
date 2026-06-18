@@ -1,0 +1,16 @@
+[
+  "test_cart.py::TestCartWorkflow::test_checkout_with_missing_info",
+  "test_cart.py::TestCartWorkflow::test_end_to_end_purchase",
+  "test_cart.py::TestCartWorkflow::test_remove_product_from_cart",
+  "tests/test_cart.py::TestCartWorkflow::test_checkout_with_missing_info",
+  "tests/test_cart.py::TestCartWorkflow::test_end_to_end_purchase",
+  "tests/test_cart.py::TestCartWorkflow::test_remove_product_from_cart",
+  "tests/test_checkout.py::TestCheckout::test_checkout_complete_flow",
+  "tests/test_checkout.py::TestCheckout::test_checkout_empty_firstname",
+  "tests/test_checkout.py::TestCheckout::test_checkout_empty_lastname",
+  "tests/test_checkout.py::TestCheckout::test_checkout_empty_zipcode",
+  "tests/test_login.py::TestLogin::test_login_failures[-secret_sauce]",
+  "tests/test_login.py::TestLogin::test_login_failures[locked_out_user-secret_sauce]",
+  "tests/test_login.py::TestLogin::test_login_failures[standard_user-wrongpass]",
+  "tests/test_login.py::TestLogin::test_login_success"
+]
