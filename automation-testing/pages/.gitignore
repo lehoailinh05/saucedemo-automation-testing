@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Pytest cache
+.pytest_cache/
+
+# Môi trường ảo (nếu có)
+venv/
+.env
+
+# Báo cáo kết quả (có thể tạo lại)
+report.html
