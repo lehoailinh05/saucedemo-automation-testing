@@ -100,7 +100,7 @@ Framework kiểm thử tự động xây dựng từ đầu cho SauceDemo, áp d
 ### Cài đặt và chạy
 ```bash
 # Clone repo
-git clone https://github.com/lehoailinh05/saucedemo-automation-testing.git
+git clone https://github.com/lehoailinh05/saucedemo-manual-automation-testing.git
 
 # Cài thư viện
 pip install -r requirements.txt
